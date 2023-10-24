@@ -32,6 +32,8 @@ export const USERS_API = {
 	}),
 	update: (user: User) =>
 		axiosInstance.put(`/table/${user.id}/`, user),
+	create: (user: User) =>
+		axiosInstance.post(`/table/`, user),
 };
 
 

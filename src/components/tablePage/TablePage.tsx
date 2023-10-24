@@ -3,7 +3,7 @@ import {useDispatch} from "react-redux";
 import { motion } from "framer-motion";
 
 import TableItem from "./TableItem";
-import UserUpdatingModal from "./UserUpdatingModal";
+import UserModal from "./UserModal";
 import Pagination from "./Pagination";
 
 import {useAppSelector} from "../../redux/hooks";
@@ -21,23 +21,23 @@ const TablePage = () => {
 
 	const users = useAppSelector((state) => state.userReducer.users);
 
-	const [isUpdatingModalOpen, setIsUpdatingModalOpen] = useState(false)
+	const [isUserModalOpen, setIsUserModalOpen] = useState(false)
 	const [searchQuery, setSearchQuery] = useState('')
+
+	const userToEdit = useAppSelector((state) => state.userReducer.userToEdit);
 
 	const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setSearchQuery(event.target.value);
 	};
 
 	const onUpdateClick = (user: User) => {
-		setIsUpdatingModalOpen(!isUpdatingModalOpen)
+		setIsUserModalOpen(!isUserModalOpen)
 		dispatch(setUserToEdit(user));
 	};
 
 	return (
 		<div
 			className={" h-screen flex justify-center  flex-col items-center bg-gradient-to-br from-green-400 to-blue-500"}>
-
-			{isUpdatingModalOpen && <UserUpdatingModal setIsUpdatingModalOpen={setIsUpdatingModalOpen} />}
 
 			<button
 				onClick={() => {
@@ -49,7 +49,19 @@ const TablePage = () => {
 				Log Out
 			</button>
 
-			<div className="flex items-center pb-4">
+			<div className="flex items-center pb-4 gap-2">
+				<button
+					onClick={(e) => {
+						e.stopPropagation();
+						setIsUserModalOpen(true)
+						console.log(isUserModalOpen , 'isUserModalOpen')
+						dispatch(setUserToEdit(null))
+					}}
+					className="w-[200px] bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-md mb-2  top-3 right-3"
+				>
+					Create new user
+				</button>
+
 				<input
 					type="text"
 					id="search"
@@ -59,6 +71,8 @@ const TablePage = () => {
 					className="border border-gray-300 rounded-md p-2 w-[300px] self-start"
 				/>
 			</div>
+
+			{isUserModalOpen && <UserModal mode={userToEdit ? "update" : "create"} setIsUserModalOpen={setIsUserModalOpen} />}
 
 			<motion.table
 				initial={{ opacity: 0, scale: 0.8 }}

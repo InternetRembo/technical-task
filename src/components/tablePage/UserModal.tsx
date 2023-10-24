@@ -8,8 +8,9 @@ import ErrorMessage from "../commons/ErrorMessage";
 import ClickOutsideHandler from "../commons/ClickOutsideHandler";
 
 import {useAppSelector} from "../../redux/hooks";
-import {getUsersDataAsync, updateUserAsync} from "../../redux/slices/userSlice";
+import {createUserAsync, getUsersDataAsync, updateUserAsync} from "../../redux/slices/userSlice";
 import {AppDispatch} from "../../redux/redux-store";
+import {toast} from "react-toastify";
 
 const moment = require('moment');
 
@@ -22,10 +23,11 @@ type UserUpdatingForm = {
 };
 
 type  UserUpdatingModalProps = {
-	setIsUpdatingModalOpen: (bool: boolean) => void
+	setIsUserModalOpen: (bool: boolean) => void
+	mode: 'create' | 'update'
 }
 
-const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModalOpen}) => {
+const UserModal: React.FC<UserUpdatingModalProps> = ({setIsUserModalOpen , mode}) => {
 
 	const dispatch = useDispatch<AppDispatch>();
 
@@ -35,13 +37,13 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 		? moment(userToEdit?.birthday_date, 'DD-MM-YY').format('YYYY-MM-DD')
 		: '';
 
-	const initialFormValues = {
+	const initialFormValues = userToEdit? {
 		name: userToEdit?.name,
 		email: userToEdit?.email,
 		birthday_date: formattedBirthdayDate ,
 		phone_number: userToEdit?.phone_number,
 		address: userToEdit?.address,
-	};
+	} : {}
 
 	const {
 		register,
@@ -53,7 +55,7 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 
 	const onSubmit: SubmitHandler<UserUpdatingForm> = async (data) => {
 
-		let UpdatedUserData = {
+		let newUserData = {
 			id: userToEdit?.id || 1,
 			name: data.name,
 			email: data.email,
@@ -62,9 +64,20 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 			address: data.address,
 		};
 
-		dispatch(updateUserAsync(UpdatedUserData))
+		try {
+			if (mode === "update") {
+				await dispatch(updateUserAsync(newUserData))
+			} else {
+				await dispatch(createUserAsync(newUserData));
+			}
+			await dispatch(getUsersDataAsync({}))
+			toast.success(`The user was successfully ${(mode === 'create'? 'Created' : 'Updated')}  `);
+		} catch (error:any) {
+			toast.error(error.message || 'Error');
+		}
+		
 		dispatch(getUsersDataAsync({}))
-		setIsUpdatingModalOpen(false)
+		setIsUserModalOpen(false)
 	};
 	return (
 		<motion.div className=" flex items-center justify-center  shadow-2xl absolute "
@@ -74,9 +87,9 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 					transition={{ duration: 1, ease: "easeOut" }}
 		>
 
-			<ClickOutsideHandler onAwayClick={() => setIsUpdatingModalOpen(false)}>
+			<ClickOutsideHandler onAwayClick={() => setIsUserModalOpen(false)}>
 				<div className="bg-white rounded-lg shadow-md w-[480px] min-h-[200px] ">
-					<h1 className={"pt-3 px-3 text-center text-4xl"}>User Updating</h1>
+					<h1 className={"pt-3 px-3 text-center text-4xl"}> {mode === 'create'? 'User Creating' : 'User Updating'}</h1>
 
 					<form onSubmit={handleSubmit(onSubmit)}>
 						<div className="bg-white px-4 pb-4 sm:p-6 sm:pb-4 ">
@@ -90,10 +103,6 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 										className="register_input"
 										{...register("name", {
 											required: "Please enter a new name",
-											minLength: {
-												value: 1,
-												message: "Name must be at least 1 character long",
-											},
 											maxLength: {
 												value: 255,
 												message: "Name must not exceed 255 characters",
@@ -112,13 +121,9 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 										className="register_input"
 										{...register("email", {
 											required: "Please enter a new email",
-											minLength: {
-												value: 1,
-												message: "Email must be at least 1 character long",
-											},
-											maxLength: {
-												value: 254,
-												message: "Email must not exceed 254 characters",
+											pattern: {
+												value:/^[a-z0-9]+@[a-z0-9]+\.[a-z0-9]+$/,
+												message: "The email address is incorrect",
 											},
 										})}
 									/>
@@ -134,19 +139,19 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 									<Controller
 										name={"birthday_date"}
 										control={control}
-										render={({ field: { onChange, value, name, ref } }) => {
-											return (
-												<DatePicker
-													selected={value ? new Date(value) : null}
-													onChange={(date , event) => {
-														event?.stopPropagation()
-														onChange(date);
-													}}
-													dateFormat="MM/dd/yyyy"
-													placeholderText="Pick date"
-													className="w-full py-[6px] pl-3 pr-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:border-2"												/>
-											);
-										}}
+										render={({ field: { onChange, value, name, ref } }) => (
+											<DatePicker
+												selected={value ? new Date(value) : null}
+												onChange={(date, event) => {
+													event?.stopPropagation();
+													onChange(date);
+												}}
+												dateFormat="MM/dd/yyyy"
+												placeholderText="Pick date"
+												className="w-full py-[6px] pl-3 pr-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:border-blue-500 focus:border-2"
+												required
+											/>
+										)}
 									/>
 									{errors.birthday_date && <ErrorMessage error={errors.birthday_date.message}/>}
 								</div>
@@ -159,13 +164,13 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 										className="register_input"
 										{...register("phone_number", {
 											required: "Please enter a new phone number",
-											minLength: {
-												value: 1,
-												message: "Phone number must be at least 1 character long",
-											},
 											maxLength: {
 												value: 20,
 												message: "Phone number must not exceed 20 characters",
+											},
+											pattern: {
+												value: /^[0-9+][0-9]*$/,
+												message: "The phone number address is incorrect",
 											},
 										})}
 									/>
@@ -180,10 +185,6 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 										className="register_input"
 										{...register("address", {
 											required: "Please enter a new address",
-											minLength: {
-												value: 1,
-												message: "Address must be at least 1 character long",
-											},
 
 										})}
 									/>
@@ -198,7 +199,7 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 								type="submit"
 								className=" w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
 							>
-								Update
+								{mode === 'create' ? 'Create' : 'Update'}
 							</button>
 						</div>
 					</form>
@@ -209,4 +210,4 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 	);
 };
 
-export default UserUpdatingModal
+export default UserModal

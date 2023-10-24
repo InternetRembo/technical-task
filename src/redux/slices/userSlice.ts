@@ -25,6 +25,13 @@ export const deleteUserAsync = createAsyncThunk(
 		return result.data;
 	}
 );
+export const createUserAsync = createAsyncThunk(
+	"users/createUser",
+	async (userData: User) => {
+		const result = await USERS_API.create(userData);
+		return result.data;
+	}
+);
 export const updateUserAsync = createAsyncThunk(
 	"users/updateUser",
 	async (userData: User) => {
