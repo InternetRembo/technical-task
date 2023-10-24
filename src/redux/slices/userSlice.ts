@@ -22,7 +22,6 @@ export const deleteUserAsync = createAsyncThunk(
 	"users/deleteUser",
 	async (id:number) => {
 		const result = await USERS_API.delete(id);
-		console.log(result , 'd result')
 		return result.data;
 	}
 );

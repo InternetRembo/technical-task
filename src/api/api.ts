@@ -11,7 +11,7 @@ const axiosInstance = axios.create({
 export const AUTHENTICATION_API = {
 	logIn: (data: logInDataType): Promise<any> =>
 		axiosInstance.post(`/login/`, data).catch((error) => {
-			toast.error(error.response.data.message);
+			toast.error(`Error : ${error.response.data.error}`);
 		}),
 };
 export const USERS_API = {
@@ -27,7 +27,9 @@ export const USERS_API = {
 		return axiosInstance.get(url);
 
 	},
-	delete: (id: number): Promise<any> => axiosInstance.delete(`/table/${id}`),
+	delete: (id: number): Promise<any> => axiosInstance.delete(`/table/${id}`).catch((error) => {
+		toast.error(`Error : ${error.response.data.detail}`);
+	}),
 	update: (user: User) =>
 		axiosInstance.put(`/table/${user.id}/`, user),
 };

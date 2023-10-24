@@ -21,7 +21,7 @@ const TableItem: React.FC<TableItemProps> = ({user, onUpdateClick}) => {
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
 	return (
-		<tr>
+		<tr className={'h-[50px]'}>
 			<td className="users-table-td">
 				{user.name}
 			</td>

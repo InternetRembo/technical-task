@@ -1,5 +1,6 @@
 import React, {ChangeEvent, useEffect, useState} from 'react';
 import {useDispatch} from "react-redux";
+import { motion } from "framer-motion";
 
 import TableItem from "./TableItem";
 import UserUpdatingModal from "./UserUpdatingModal";
@@ -36,7 +37,7 @@ const TablePage = () => {
 		<div
 			className={" h-screen flex justify-center  flex-col items-center bg-gradient-to-br from-green-400 to-blue-500"}>
 
-			{isUpdatingModalOpen && <UserUpdatingModal setIsUpdatingModalOpen={setIsUpdatingModalOpen}/>}
+			{isUpdatingModalOpen && <UserUpdatingModal setIsUpdatingModalOpen={setIsUpdatingModalOpen} />}
 
 			<button
 				onClick={() => {
@@ -59,12 +60,18 @@ const TablePage = () => {
 				/>
 			</div>
 
-			<table className="  bg-white border border-gray-300 max-w-[1200px] shadow-2xl rounded-lg">
+			<motion.table
+				initial={{ opacity: 0, scale: 0.8 }}
+				animate={{ opacity: 1, scale: 1 }}
+				exit={{ opacity: 0, scale: 0.8 }}
+				transition={{ duration: 0.5 }}
+				className="bg-white border border-gray-300 max-w-[1200px] shadow-2xl rounded-lg"
+			>
 				<thead>
 				<tr>
 					<th className="users-table-th text-center w-56 ">Name</th>
-					<th className="users-table-th text-center w-56 ">Email</th>
 					<th className="users-table-th text-center w-56 ">Date of birth</th>
+					<th className="users-table-th text-center w-56 ">Email</th>
 					<th className="users-table-th text-center w-56 ">Phone number</th>
 					<th className="users-table-th text-center w-72 ">Address</th>
 					<th className="px-4 py-2 font-semibold text-gray-700 border-b"></th>
@@ -79,7 +86,7 @@ const TablePage = () => {
 					/>
 				))}
 				</tbody>
-			</table>
+			</motion.table>
 			<Pagination/>
 		</div>
 	);

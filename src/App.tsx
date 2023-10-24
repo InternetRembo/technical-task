@@ -1,5 +1,7 @@
 import React, {useEffect} from 'react';
 import "react-datepicker/dist/react-datepicker.css";
+import "react-toastify/dist/ReactToastify.css";
+import {ToastContainer} from "react-toastify";
 import {useDispatch} from "react-redux";
 import {Route, Routes, useNavigate} from "react-router-dom";
 
@@ -45,6 +47,7 @@ function App() {
 				/>
 			</Routes>
 
+			<ToastContainer/>
 		</>
 	);
 }

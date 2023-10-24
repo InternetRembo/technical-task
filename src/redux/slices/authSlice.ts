@@ -2,6 +2,7 @@ import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 import {authSliceStateType, logInDataType} from "../../types/types";
 import {AUTHENTICATION_API} from "../../api/api";
+import {toast} from "react-toastify";
 
 let initialState: authSliceStateType = {
 	isAuth: false,
@@ -25,6 +26,7 @@ const authSlice = createSlice({
 	extraReducers: (builder) => {
 		builder.addCase(logInUser.fulfilled, (state, action) => {
 			state.isAuth = true;
+			toast.success(`Authentication was successful`);
 			sessionStorage.setItem('auth', action.payload.message)
 		});
 	},

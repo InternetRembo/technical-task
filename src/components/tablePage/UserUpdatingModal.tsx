@@ -2,6 +2,7 @@ import React from 'react';
 import {SubmitHandler, useForm , Controller} from "react-hook-form";
 import DatePicker from "react-datepicker";
 import {useDispatch} from "react-redux";
+import { motion } from "framer-motion";
 
 import ErrorMessage from "../commons/ErrorMessage";
 import ClickOutsideHandler from "../commons/ClickOutsideHandler";
@@ -66,8 +67,13 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 		setIsUpdatingModalOpen(false)
 	};
 	return (
+		<motion.div className=" flex items-center justify-center  shadow-2xl absolute "
+					initial={{ opacity: 0, scale: 0.8 }}
+					animate={{ opacity: 1, scale: 1 }}
+					exit={{ opacity: 0, scale: 0.8 }}
+					transition={{ duration: 1, ease: "easeOut" }}
+		>
 
-		<div className=" flex items-center justify-center  shadow-2xl absolute ">
 			<ClickOutsideHandler onAwayClick={() => setIsUpdatingModalOpen(false)}>
 				<div className="bg-white rounded-lg shadow-md w-[480px] min-h-[200px] ">
 					<h1 className={"pt-3 px-3 text-center text-4xl"}>User Updating</h1>
@@ -84,7 +90,16 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 										className="register_input"
 										{...register("name", {
 											required: "Please enter a new name",
+											minLength: {
+												value: 1,
+												message: "Name must be at least 1 character long",
+											},
+											maxLength: {
+												value: 255,
+												message: "Name must not exceed 255 characters",
+											},
 										})}
+
 									/>
 									{errors.name && <ErrorMessage error={errors.name.message}/>}
 								</div>
@@ -97,9 +112,17 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 										className="register_input"
 										{...register("email", {
 											required: "Please enter a new email",
+											minLength: {
+												value: 1,
+												message: "Email must be at least 1 character long",
+											},
+											maxLength: {
+												value: 254,
+												message: "Email must not exceed 254 characters",
+											},
 										})}
 									/>
-									{errors.name && <ErrorMessage error={errors.name.message}/>}
+									{errors.email && <ErrorMessage error={errors.email.message}/>}
 								</div>
 
 								<div className="mt-6 ">
@@ -136,6 +159,14 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 										className="register_input"
 										{...register("phone_number", {
 											required: "Please enter a new phone number",
+											minLength: {
+												value: 1,
+												message: "Phone number must be at least 1 character long",
+											},
+											maxLength: {
+												value: 20,
+												message: "Phone number must not exceed 20 characters",
+											},
 										})}
 									/>
 									{errors.phone_number && <ErrorMessage error={errors.phone_number.message}/>}
@@ -149,6 +180,11 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 										className="register_input"
 										{...register("address", {
 											required: "Please enter a new address",
+											minLength: {
+												value: 1,
+												message: "Address must be at least 1 character long",
+											},
+
 										})}
 									/>
 									{errors.address && <ErrorMessage error={errors.address.message}/>}
@@ -169,7 +205,7 @@ const UserUpdatingModal: React.FC<UserUpdatingModalProps> = ({setIsUpdatingModal
 
 				</div>
 			</ClickOutsideHandler>
-		</div>
+		</motion.div>
 	);
 };
 
