@@ -1,19 +1,21 @@
 import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {FaEye, FaEyeSlash} from "react-icons/fa";
+import {useDispatch} from "react-redux";
 
 import ErrorMessage from "../commons/ErrorMessage";
 
-type LoginFormProps = {
-
-};
+import {logInUser} from "../../redux/slices/authSlice";
+import {AppDispatch} from "../../redux/redux-store";
 
 type LoginForm = {
-	login: string;
+	username: string;
 	password: string;
 };
 
-const LoginForm: React.FC<LoginFormProps> = () => {
+const LoginForm = () => {
+	const dispatch = useDispatch<AppDispatch>();
+
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
 	const {
@@ -25,10 +27,10 @@ const LoginForm: React.FC<LoginFormProps> = () => {
 	const onSubmit: SubmitHandler<LoginForm> = async (data) => {
 
 		let logInData = {
-			login: data.login,
+			username: data.username,
 			password: data.password,
 		};
-
+		dispatch(logInUser(logInData))
 	};
 
 	return (
@@ -36,16 +38,16 @@ const LoginForm: React.FC<LoginFormProps> = () => {
 			<div className="bg-white px-4 pb-4 sm:p-6 sm:pb-4 ">
 				<div className="w-full flex flex-col justify-center items-center p-6">
 						<div className="mt-6 ">
-							<label htmlFor="login" className="input_label">
-								Login
+							<label htmlFor="username" className="input_label">
+								User Name
 							</label>
 							<input
 								className="register_input"
-								{...register("login", {
-									required: "Please enter your login",
+								{...register("username", {
+									required: "Please enter an username",
 								})}
 							/>
-							{errors.login && <ErrorMessage error={errors.login.message} />}
+							{errors.username && <ErrorMessage error={errors.username.message} />}
 						</div>
 
 

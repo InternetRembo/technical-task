@@ -1,25 +1,50 @@
-import React from 'react';
-import LoginPage from "./components/LoginPage/LoginPage";
+import React, {useEffect} from 'react';
+import {useDispatch} from "react-redux";
+import {Route, Routes, useNavigate} from "react-router-dom";
 
+import LoginPage from "./components/loginPage/LoginPage";
+import TablePage from "./components/tablePage/TablePage";
+
+import {useAppSelector} from "./redux/hooks";
+import {setIsAuth} from "./redux/slices/authSlice";
+import {AppDispatch} from "./redux/redux-store";
 
 function App() {
+
+    const dispatch = useDispatch<AppDispatch>();
+
+    useEffect(() => {
+        if(sessionStorage.getItem('auth')){
+            dispatch(setIsAuth(true))
+        }
+    } , [])
+
+    const isAuth = useAppSelector((state) => state.authReducer.isAuth);
+
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        isAuth ? navigate('/') : navigate('/auth')
+    },[isAuth])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+<Routes>
+    <Route
+        path={"/auth"}
+        element={
+                <LoginPage />
+        }
+    />
+    <Route
+        path={"/"}
+        element={
+                <TablePage />
+        }
+    />
+</Routes>
+
+    </>
   );
 }
 
