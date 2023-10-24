@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, {useState} from "react";
+import {useDispatch} from "react-redux";
 
-import { AppDispatch } from "../../redux/redux-store";
-import { useAppSelector } from "../../redux/hooks";
+import {AppDispatch} from "../../redux/redux-store";
+import {useAppSelector} from "../../redux/hooks";
 import {getUsersDataAsync} from "../../redux/slices/userSlice";
 
 const Pagination = () => {
@@ -49,9 +49,7 @@ const Pagination = () => {
 
 	const onPageChange = (page: number) => {
 
-		console.log(page , 'page')
-
-		let offset =  page === 1 ? '' : ((page - 1) * 10).toString();
+		let offset = page === 1 ? '' : ((page - 1) * 10).toString();
 
 		dispatch(
 			getUsersDataAsync({

@@ -25,11 +25,10 @@ const authSlice = createSlice({
 	extraReducers: (builder) => {
 		builder.addCase(logInUser.fulfilled, (state, action) => {
 			state.isAuth = true;
-			console.log(action , 'login action')
-			sessionStorage.setItem('auth' , action.payload.message)
+			sessionStorage.setItem('auth', action.payload.message)
 		});
 	},
 });
 
 export const authReducer = authSlice.reducer;
-export const { setIsAuth } = authSlice.actions;
+export const {setIsAuth} = authSlice.actions;

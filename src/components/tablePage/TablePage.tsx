@@ -16,14 +16,14 @@ const TablePage = () => {
 
 	useEffect(() => {
 		dispatch(getUsersDataAsync({}))
-	},[])
+	}, [])
 
 	const users = useAppSelector((state) => state.userReducer.users);
 
-	const [isUpdatingModalOpen , setIsUpdatingModalOpen] = useState(false)
-	const [searchQuery , setSearchQuery] = useState('')
+	const [isUpdatingModalOpen, setIsUpdatingModalOpen] = useState(false)
+	const [searchQuery, setSearchQuery] = useState('')
 
-	const  handleInputChange = (event:ChangeEvent<HTMLInputElement>) => {
+	const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
 		setSearchQuery(event.target.value);
 	};
 
@@ -33,12 +33,13 @@ const TablePage = () => {
 	};
 
 	return (
-		<div className={" h-screen flex justify-center  flex-col items-center bg-gradient-to-br from-green-400 to-blue-500"}>
+		<div
+			className={" h-screen flex justify-center  flex-col items-center bg-gradient-to-br from-green-400 to-blue-500"}>
 
-			{isUpdatingModalOpen && <UserUpdatingModal  setIsUpdatingModalOpen={setIsUpdatingModalOpen}/>}
+			{isUpdatingModalOpen && <UserUpdatingModal setIsUpdatingModalOpen={setIsUpdatingModalOpen}/>}
 
 			<button
-				onClick={()=> {
+				onClick={() => {
 					dispatch(setIsAuth(false))
 					sessionStorage.removeItem('auth')
 				}}
@@ -73,13 +74,13 @@ const TablePage = () => {
 				{users.filter((user) => user.name.toLowerCase().includes(searchQuery.toLowerCase())).map((user: User, index) => (
 					<TableItem
 						user={user}
-						 onUpdateClick={onUpdateClick}
+						onUpdateClick={onUpdateClick}
 						key={user.id || "" + index}
 					/>
 				))}
 				</tbody>
 			</table>
-			<Pagination />
+			<Pagination/>
 		</div>
 	);
 };

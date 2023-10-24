@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, {useState} from "react";
+import {useDispatch} from "react-redux";
 import {TfiMenu} from "react-icons/tfi";
 import {GrUpdate} from "react-icons/gr";
 import {BsTrash3} from "react-icons/bs";
@@ -15,13 +15,13 @@ type TableItemProps = {
 	onUpdateClick: (user: User) => void;
 };
 
-const TableItem: React.FC<TableItemProps> = ({user , onUpdateClick}) => {
+const TableItem: React.FC<TableItemProps> = ({user, onUpdateClick}) => {
 	const dispatch = useDispatch<AppDispatch>();
-	
+
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
 	return (
-		<tr> 
+		<tr>
 			<td className="users-table-td">
 				{user.name}
 			</td>
@@ -37,14 +37,14 @@ const TableItem: React.FC<TableItemProps> = ({user , onUpdateClick}) => {
 			</td>
 
 			<td className="border-b relative text-xs ">
-					<button
-						onClick={(e) => {
-							e.stopPropagation();
-							setIsDropdownOpen((prev) => !prev);
-						}}
-					>
-						<TfiMenu size={20} />
-					</button>
+				<button
+					onClick={(e) => {
+						e.stopPropagation();
+						setIsDropdownOpen((prev) => !prev);
+					}}
+				>
+					<TfiMenu size={20}/>
+				</button>
 
 				{isDropdownOpen && (
 					<ClickOutsideHandler onAwayClick={() => setIsDropdownOpen(false)}>
@@ -59,10 +59,10 @@ const TableItem: React.FC<TableItemProps> = ({user , onUpdateClick}) => {
 				  }
 				  onClick={(e) => {
 					  e.stopPropagation();
-					   onUpdateClick(user);
+					  onUpdateClick(user);
 				  }}
 			  >
-                Update&nbsp; <GrUpdate />
+                Update&nbsp; <GrUpdate/>
               </span>
 							<div
 								className={
@@ -73,7 +73,7 @@ const TableItem: React.FC<TableItemProps> = ({user , onUpdateClick}) => {
 									dispatch(getUsersDataAsync({}))
 								}}
 							>
-								Delete&nbsp; <BsTrash3 />
+								Delete&nbsp; <BsTrash3/>
 							</div>
 						</div>
 					</ClickOutsideHandler>

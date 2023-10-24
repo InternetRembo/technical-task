@@ -1,5 +1,5 @@
 import axios from "axios";
-import { toast } from "react-toastify";
+import {toast} from "react-toastify";
 
 import {logInDataType, User} from "../types/types";
 
@@ -15,7 +15,7 @@ export const AUTHENTICATION_API = {
 		}),
 };
 export const USERS_API = {
-	getAll: (offset?:string) => {
+	getAll: (offset?: string) => {
 
 		let queryParams = "";
 
@@ -24,10 +24,10 @@ export const USERS_API = {
 		}
 		const url = `/table/${queryParams ? `?${queryParams}` : ""}`
 
-		return  axiosInstance.get(url);
+		return axiosInstance.get(url);
 
 	},
-	delete: (id:number): Promise<any> => axiosInstance.delete(`/table/${id}`),
+	delete: (id: number): Promise<any> => axiosInstance.delete(`/table/${id}`),
 	update: (user: User) =>
 		axiosInstance.put(`/table/${user.id}/`, user),
 };

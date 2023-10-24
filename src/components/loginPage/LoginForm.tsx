@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import React, {useState} from "react";
+import {SubmitHandler, useForm} from "react-hook-form";
 import {FaEye, FaEyeSlash} from "react-icons/fa";
 import {useDispatch} from "react-redux";
 
@@ -21,7 +21,7 @@ const LoginForm = () => {
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
+		formState: {errors},
 	} = useForm<LoginForm>();
 
 	const onSubmit: SubmitHandler<LoginForm> = async (data) => {
@@ -37,19 +37,18 @@ const LoginForm = () => {
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<div className="bg-white px-4 pb-4 sm:p-6 sm:pb-4 ">
 				<div className="w-full flex flex-col justify-center items-center p-6">
-						<div className="mt-6 ">
-							<label htmlFor="username" className="input_label">
-								User Name
-							</label>
-							<input
-								className="register_input"
-								{...register("username", {
-									required: "Please enter an username",
-								})}
-							/>
-							{errors.username && <ErrorMessage error={errors.username.message} />}
-						</div>
-
+					<div className="mt-6 ">
+						<label htmlFor="username" className="input_label">
+							User Name
+						</label>
+						<input
+							className="register_input"
+							{...register("username", {
+								required: "Please enter an username",
+							})}
+						/>
+						{errors.username && <ErrorMessage error={errors.username.message}/>}
+					</div>
 
 
 					<div className="mt-6">
@@ -79,7 +78,7 @@ const LoginForm = () => {
 							)}
 						</div>
 						{errors.password && (
-							<ErrorMessage error={errors.password.message} />
+							<ErrorMessage error={errors.password.message}/>
 						)}
 					</div>
 				</div>

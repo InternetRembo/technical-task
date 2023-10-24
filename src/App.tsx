@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react';
+import "react-datepicker/dist/react-datepicker.css";
 import {useDispatch} from "react-redux";
 import {Route, Routes, useNavigate} from "react-router-dom";
 
@@ -11,41 +12,41 @@ import {AppDispatch} from "./redux/redux-store";
 
 function App() {
 
-    const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useDispatch<AppDispatch>();
 
-    useEffect(() => {
-        if(sessionStorage.getItem('auth')){
-            dispatch(setIsAuth(true))
-        }
-    } , [])
+	useEffect(() => {
+		if (sessionStorage.getItem('auth')) {
+			dispatch(setIsAuth(true))
+		}
+	}, [])
 
-    const isAuth = useAppSelector((state) => state.authReducer.isAuth);
+	const isAuth = useAppSelector((state) => state.authReducer.isAuth);
 
-    const navigate = useNavigate();
+	const navigate = useNavigate();
 
-    useEffect(()=>{
-        isAuth ? navigate('/') : navigate('/auth')
-    },[isAuth])
+	useEffect(() => {
+		isAuth ? navigate('/') : navigate('/auth')
+	}, [isAuth])
 
-  return (
-    <>
-<Routes>
-    <Route
-        path={"/auth"}
-        element={
-                <LoginPage />
-        }
-    />
-    <Route
-        path={"/"}
-        element={
-                <TablePage />
-        }
-    />
-</Routes>
+	return (
+		<>
+			<Routes>
+				<Route
+					path={"/auth"}
+					element={
+						<LoginPage/>
+					}
+				/>
+				<Route
+					path={"/"}
+					element={
+						<TablePage/>
+					}
+				/>
+			</Routes>
 
-    </>
-  );
+		</>
+	);
 }
 
 export default App;
